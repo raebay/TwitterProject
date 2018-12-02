@@ -16,8 +16,9 @@ public class PostController {
     public PostRepository postRepository;
 
     @RequestMapping(value = "/addPost", method = RequestMethod.POST)
-    public void addPost(@RequestBody Post newPost) {
+    public Post addPost(@RequestBody Post newPost) {
         postRepository.save(newPost);
+        return newPost;
     }
 
     @RequestMapping(value = "/getPost", method = RequestMethod.GET)
