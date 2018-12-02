@@ -5,6 +5,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import java.io.*;
@@ -14,6 +15,7 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Random;
 
+@Component
 @RestController
 public class ScheduledTasks {
 
@@ -26,6 +28,7 @@ public class ScheduledTasks {
     static RestTemplate restTemplate = new RestTemplate();
     String[] subReds = {"cleanjokes", "ShittyLifeProTips", "Showerthoughts", "fortunecookies", "dogpictures"};
     Random rand = new Random();
+
 
     @Scheduled(cron = "*/5 * * * * *")
     public void addPost() throws IOException {
