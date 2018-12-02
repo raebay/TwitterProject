@@ -31,7 +31,7 @@ public class ScheduledTasks {
     public void addPost() throws IOException {
         int s = rand.nextInt(subReds.length);
         Post post = getPost(id++, Arrays.asList(subReds).get(s));
-        String url = "http://localhost:8080/addPost";
+        String url = "http://localhost:8080/addPostToDB";
         restTemplate.postForObject(url, post, Post.class);
         System.out.println("Post saved to db");
     }
@@ -41,7 +41,7 @@ public class ScheduledTasks {
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-        Post post = restTemplate.getForObject("http://localhost:8080/getPost", Post.class);
+        Post post = restTemplate.getForObject("http://localhost:8080/getRandPost", Post.class);
         System.out.println("Post retrieved from DB");
         String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
         HttpPost httpPost = new HttpPost("https://api.twitter.com/1.1/statuses/update.json?status=" + str );

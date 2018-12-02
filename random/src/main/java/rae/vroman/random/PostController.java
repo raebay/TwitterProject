@@ -15,13 +15,13 @@ public class PostController {
     @Autowired
     public PostRepository postRepository;
 
-    @RequestMapping(value = "/addPost", method = RequestMethod.POST)
+    @RequestMapping(value = "/addPostToDB", method = RequestMethod.POST)
     public Post addPost(@RequestBody Post newPost) {
         postRepository.save(newPost);
         return newPost;
     }
 
-    @RequestMapping(value = "/getPost", method = RequestMethod.GET)
+    @RequestMapping(value = "/getRandPost", method = RequestMethod.GET)
     public Post getPost() {
 
         Random rand = new Random(postRepository.count());
