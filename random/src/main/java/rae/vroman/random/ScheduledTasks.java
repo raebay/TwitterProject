@@ -4,6 +4,7 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,6 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Random;
 
-@Component
 @RestController
 public class ScheduledTasks {
 
