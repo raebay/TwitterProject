@@ -23,7 +23,7 @@ public class ScheduledTasks {
     private static String accessTokenSecretStr = "U6CtKUwgErYnC7XgbmLK1Qfsmm2OiWgyRIlK5X8IlaMPw ";
 
     int id = 0;
-    RestTemplate restTemplate = new RestTemplate();
+    static RestTemplate restTemplate = new RestTemplate();
     String[] subReds = {"cleanjokes", "ShittyLifeProTips", "Showerthoughts", "fortunecookies", "dogpictures"};
     Random rand = new Random();
 
@@ -38,7 +38,7 @@ public class ScheduledTasks {
 
 
     @Scheduled(cron = "*/5 * * * * *")
-    public void postToTwitter() throws Exception {
+    public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
         Post post = restTemplate.getForObject("http://localhost:8080/getPost", Post.class);
