@@ -21,10 +21,10 @@ import org.apache.commons.io.IOUtils;
 @RestController
 public class ScheduledTasks {
 
-    private static String consumerKeyStr = "LDJ4eFCbZVNdQjqsfrRu2DikF ";
-    private static String consumerSecretStr = "dGaned10ImpqbYaevUyG5jEYAXj5lnXujpXsyhfeLWj1zZZ1DC ";
-    private static String accessTokenStr = "719527259556724736-KFnW0pmN3pIoRhZJ0DP320yFAaqQfvM";
-    private static String accessTokenSecretStr = "U6CtKUwgErYnC7XgbmLK1Qfsmm2OiWgyRIlK5X8IlaMPw ";
+    private static String consumerKeyStr = "5QmjQqdKqYNklbdZXccylu7dF";
+    private static String consumerSecretStr = "OltKkbgCV5HQPoqfYYUu7JWCzrlTb2D48YK6C6M2hUjyHtbgxT";
+    private static String accessTokenStr = "719527259556724736-S4IZ4hue8ndqiTYQyYTvg0ZQgTYg2kv";
+    private static String accessTokenSecretStr = "ghVYM4o4P5Dz0cjVJt1q09u161Mib3w47N09C0PYoUfiQ";
 
     int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
