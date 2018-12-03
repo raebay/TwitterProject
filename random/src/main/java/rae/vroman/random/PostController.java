@@ -23,16 +23,18 @@ public class PostController {
 
     @RequestMapping(value = "/getRandPost", method = RequestMethod.GET)
     public Post getPost() {
+        int id = (int) postRepository.count();
+        Random rand = new Random();
+        int num = rand.nextInt(id);
 
-        Random rand = new Random(postRepository.count());
-        long id = rand.nextLong();
+        Post post = new Post();
         for(Post po : postRepository.findAll()) {
-            if (po.getId() == id)
+            if (po.getId() == num)
             {
-                return po;
+                post = po;
             }
         }
-        return null;
+        return post;
     }
 
     @RequestMapping(value = "/getDatabaseCount", method = RequestMethod.GET)
