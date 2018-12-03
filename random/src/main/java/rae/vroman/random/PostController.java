@@ -26,14 +26,13 @@ public class PostController {
 
         Random rand = new Random(postRepository.count());
         long id = rand.nextLong();
-        Post post = new Post();
-        for(Post po : postRepository.findAll()){
-            if(po.getId() == id){
-                post = po;
-                break;
+        for(Post po : postRepository.findAll()) {
+            if (po.getId() == id)
+            {
+                return po;
             }
         }
-        return post;
+        return null;
     }
 
     @RequestMapping(value = "/getDatabaseCount", method = RequestMethod.GET)
