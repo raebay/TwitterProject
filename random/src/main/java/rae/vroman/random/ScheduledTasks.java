@@ -26,7 +26,7 @@ public class ScheduledTasks {
 
     int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
-    String[] subReds = {"cleanjokes", "ShittyLifeProTips", "Showerthoughts", "fortunecookies", "dogpictures"};
+    String[] subReds = {"cleanjokes", "ShittyLifeProTips", "Showerthoughts", "dogpictures"};
     Random rand = new Random();
 
 
