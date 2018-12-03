@@ -1,6 +1,8 @@
 package rae.vroman.random;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
@@ -13,6 +15,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Random;
+import org.apache.commons.io.IOUtils;
+
 
 @RestController
 public class ScheduledTasks {
@@ -47,10 +51,11 @@ public class ScheduledTasks {
         String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
         HttpPost httpPost = new HttpPost("https://api.twitter.com/1.1/statuses/update.json?status=" + str );
         oAuthConsumer.sign(httpPost);
-        org.apache.http.client.HttpClient httpClient = new DefaultHttpClient();
-        org.apache.http.HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse httpResponse = httpClient.execute(httpPost);
         int statusCode = httpResponse.getStatusLine().getStatusCode();
         System.out.println(statusCode + ':' + httpResponse.getStatusLine().getReasonPhrase());
+        System.out.println(IOUtils.toString(httpResponse.getEntity().getContent()));
     }
 
     public Post getPost(int id, String subRed) throws IOException {
