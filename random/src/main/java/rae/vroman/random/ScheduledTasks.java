@@ -53,14 +53,20 @@ public class ScheduledTasks {
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
         Post post = restTemplate.getForObject("http://localhost:8080/getRandPost", Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
-        String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
-        HttpPost httpPost = new HttpPost("https://api.twitter.com/1.1/statuses/update.json?status=" + str );
-        oAuthConsumer.sign(httpPost);
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpPost);
-        int statusCode = httpResponse.getStatusLine().getStatusCode();
-        System.out.println(statusCode + ':' + httpResponse.getStatusLine().getReasonPhrase());
-        System.out.println(IOUtils.toString(httpResponse.getEntity().getContent()));
+        if(post.getTitle() != null){
+            String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
+            HttpPost httpPost = new HttpPost("https://api.twitter.com/1.1/statuses/update.json?status=" + str );
+            oAuthConsumer.sign(httpPost);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+            System.out.println(statusCode + ':' + httpResponse.getStatusLine().getReasonPhrase());
+            System.out.println(IOUtils.toString(httpResponse.getEntity().getContent()));
+        }
+        else{
+            System.out.println("Post object was null, DO NOT POST");
+        }
+
     }
 
     public Post getPost(int id) throws IOException {
@@ -88,6 +94,9 @@ public class ScheduledTasks {
         }
         finally{
             if(!over18.equals("true")){
+                if(text.length() > 235){
+                    String subtext = text.substring(0, 235);
+                }
 
                 post = new Post(id, title, text, postURL);
                 inputStream.close();
