@@ -41,7 +41,7 @@ public class ScheduledTasks {
         if(post.getTitle() != null){
             String url = "http://localhost:8080/addPostToDB";
             restTemplate.postForObject(url, post, Post.class);
-            System.out.println("Post saved to db");
+            System.out.println("Post saved to db" + post.getTitle());
         }
     }
 
@@ -92,9 +92,11 @@ public class ScheduledTasks {
                 post = new Post(id, title, text, postURL);
                 inputStream.close();
                 inputReader.close();
+                System.out.println("Over 18 is not true, this is in the if finally statement" + post.getTitle());
                 return post;
             }
             else{
+                System.out.println("Over 18 is true, this is in the else finally statement" + post.getTitle());
                 return post;
             }
         }
