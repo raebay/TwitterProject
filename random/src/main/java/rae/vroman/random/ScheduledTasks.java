@@ -32,10 +32,12 @@ public class ScheduledTasks {
     Random rand = new Random();
 
 
-    @Scheduled(cron = "0 0 * * * * ")
+    //@Scheduled(cron = "0 0 * * * * ")
+    @Scheduled(cron = "*/30 * * * * *")
     public void addPost() throws IOException {
         int s = rand.nextInt(subReds.length);
-        Post post = getPost(id++, Arrays.asList(subReds).get(s));
+       // Post post = getPost(id++, Arrays.asList(subReds).get(s));
+        Post post = getPost(id++);
         if(post != null){
             String url = "http://localhost:8080/addPostToDB";
             restTemplate.postForObject(url, post, Post.class);
@@ -44,7 +46,8 @@ public class ScheduledTasks {
     }
 
 
-    @Scheduled(cron = "0 0 * * * * ")
+    //@Scheduled(cron = "0 0 * * * * ")
+    @Scheduled(cron = "*/30 * * * * *")
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
@@ -60,7 +63,43 @@ public class ScheduledTasks {
         System.out.println(IOUtils.toString(httpResponse.getEntity().getContent()));
     }
 
-    public Post getPost(int id, String subRed) throws IOException {
+    public Post getPost(int id) throws IOException {
+        Post post = new Post();
+        URL url = new URL("https://api.pushshift.io/reddit/search/submission/?q=dogs");
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String fullStr = "";
+        while ((line = inputReader.readLine()) != null) {
+            fullStr += line;
+        }
+        JSONObject json = new JSONObject(fullStr);
+        String postURL = json.getJSONArray("data").getJSONObject(0).getString("url");
+        String title = json.getJSONArray("data").getJSONObject(0).getString("title");
+        String text = json.getJSONArray("data").getJSONObject(0).getString("selftext");
+        String over18 = "";
+        try{
+            over18 = json.getJSONArray("data").getJSONObject(0).getString("over_18");
+
+        }
+        catch(Exception e){
+            System.out.println("There is no over_18 for this reddit submission");
+        }
+        finally{
+            if(!over18.equals("true")){
+
+                post = new Post(id, title, text, postURL);
+                inputStream.close();
+                inputReader.close();
+            }
+        }
+
+        return post;
+
+    }
+
+/*    public Post getPost(int id, String subRed) throws IOException {
         Post post = new Post();
         URL url = new URL("https://api.pushshift.io/reddit/search/submission/?subreddit="+ subRed + "&after=1d&sort=desc&sort_type=num_comments&is_video=false&size=1");
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -85,6 +124,6 @@ public class ScheduledTasks {
                 }
         return post;
 
-    }
+    }*/
 
 }
