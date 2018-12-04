@@ -52,7 +52,7 @@ public class ScheduledTasks {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
         Post post = restTemplate.getForObject("http://localhost:8080/getRandPost", Post.class);
-        System.out.println("Post retrieved from DB" + post.getTitle());
+        System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
         HttpPost httpPost = new HttpPost("https://api.twitter.com/1.1/statuses/update.json?status=" + str );
         oAuthConsumer.sign(httpPost);
