@@ -92,10 +92,12 @@ public class ScheduledTasks {
                 post = new Post(id, title, text, postURL);
                 inputStream.close();
                 inputReader.close();
+                return post;
+            }
+            else{
+                return post;
             }
         }
-
-        return post;
 
     }
 
@@ -105,7 +107,8 @@ public class ScheduledTasks {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        S
+        tring line = "";
         String fullStr = "";
         while ((line = inputReader.readLine()) != null) {
             fullStr += line;
