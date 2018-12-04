@@ -38,7 +38,7 @@ public class ScheduledTasks {
         int s = rand.nextInt(subReds.length);
        // Post post = getPost(id++, Arrays.asList(subReds).get(s));
         Post post = getPost(id++);
-        if(post != null){
+        if(post.getTitle() != null){
             String url = "http://localhost:8080/addPostToDB";
             restTemplate.postForObject(url, post, Post.class);
             System.out.println("Post saved to db");
