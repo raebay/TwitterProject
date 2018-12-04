@@ -47,7 +47,7 @@ public class ScheduledTasks {
 
 
     //@Scheduled(cron = "0 0 * * * * ")
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "*/45 * * * * *")
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
