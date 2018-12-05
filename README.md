@@ -19,6 +19,7 @@ public class PostController {
         postRepository.save(newPost);
         return newPost;
     }
+    
     @RequestMapping(value = "/getRandPost", method = RequestMethod.GET)
     public Post getPost() {
         int id = (int) postRepository.count();
@@ -26,7 +27,7 @@ public class PostController {
         Post post = new Post();
 
         while(post.getTitle() == null){
-                int num = rand.nextInt(id);
+                int num = rand.nextInt(id +1);
                 post = postRepository.findById(num).get();
         }
         return post;
