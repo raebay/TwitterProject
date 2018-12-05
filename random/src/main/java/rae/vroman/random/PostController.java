@@ -1,4 +1,5 @@
 package rae.vroman.random;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,14 @@ public class PostController {
     @Autowired
     public PostRepository postRepository;
 
+    @Async
     @RequestMapping(value = "/addPostToDB", method = RequestMethod.POST)
     public Post addPost(@RequestBody Post newPost) {
         postRepository.save(newPost);
         return newPost;
     }
 
+    @Async
     @RequestMapping(value = "/getRandPost", method = RequestMethod.GET)
     public Post getPost() {
         int id = (int) postRepository.count();
