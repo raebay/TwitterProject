@@ -6,6 +6,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +28,8 @@ public class ScheduledTasks {
     int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
 
-    @Scheduled(cron = "0 0 * * * * ")
+    //@Scheduled(cron = "0 0 * * * * ")
+    @Scheduled(cron = "*/30 * * * * *")
     public void addPost() throws IOException {
         Post post = getPost(id++);
         String url = "http://localhost:8080/addPostToDB";
@@ -37,11 +39,13 @@ public class ScheduledTasks {
     }
 
 
-    @Scheduled(cron = "0 0 * * * * ")
+    //@Scheduled(cron = "0 0 * * * * ")
+    @Scheduled(cron = "*/30 * * * * *")
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-        Post post = restTemplate.getForObject("http://localhost:8080/getRandPost", Post.class);
+        ResponseEntity<Post> databaseCount = restTemplate.getForEntity("http://localhost:8080/getDatabaseCount", Post.class);
+        Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + databaseCount , Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         if(post.getTitle() != null){
             String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
