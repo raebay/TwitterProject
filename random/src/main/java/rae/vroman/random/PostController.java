@@ -40,7 +40,8 @@ public class PostController {
 
     @Async
     @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
-    public Post getPost(@PathVariable("id") int id) {
+    public Post getPost(@PathVariable("id") Integer id) {
+
         Post post = postRepository.findById(id).get();
         return post;
     }

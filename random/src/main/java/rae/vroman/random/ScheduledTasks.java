@@ -44,7 +44,7 @@ public class ScheduledTasks {
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-        int databaseCount = restTemplate.getForObject("http://localhost:8080/getMostRecentPost", int.class);
+        Integer databaseCount = restTemplate.getForObject("http://localhost:8080/getMostRecentPost", Integer.class);
         Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + databaseCount , Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         if(post.getTitle() != null){
