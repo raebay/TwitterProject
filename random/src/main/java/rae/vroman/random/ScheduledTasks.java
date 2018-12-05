@@ -27,8 +27,7 @@ public class ScheduledTasks {
     int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
 
-    //@Scheduled(cron = "0 0 * * * * ")
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "0 0 * * * * ")
     public void addPost() throws IOException {
         Post post = getPost(id++);
         if(post.getTitle() == null || post.getUrl() == null){
@@ -43,8 +42,7 @@ public class ScheduledTasks {
     }
 
 
-    //@Scheduled(cron = "0 0 * * * * ")
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "0 0 * * * * ")
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
