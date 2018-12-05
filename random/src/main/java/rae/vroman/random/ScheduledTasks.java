@@ -26,6 +26,7 @@ public class ScheduledTasks {
 
     int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
+    String subRed = "dogpictures";
 
     //@Scheduled(cron = "0 0 * * * * ")
     @Scheduled(cron = "*/30 * * * * *")
@@ -43,7 +44,6 @@ public class ScheduledTasks {
     public void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-     //   Integer databaseCount = restTemplate.getForObject("http://localhost:8080/getMostRecentPost", Integer.class);
         Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + id , Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         if(post.getTitle() != null){
@@ -63,7 +63,7 @@ public class ScheduledTasks {
     }
 
     public Post getPost(int id) throws IOException {
-        URL url = new URL("https://api.pushshift.io/reddit/search/submission/?q=dogs");
+        URL url = new URL("https://api.pushshift.io/reddit/search/submission/?subreddit="+ subRed + "&after=1d&sort=desc&sort_type=num_comments&is_video=false&size=1");
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(inputStream));
