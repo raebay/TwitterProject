@@ -26,32 +26,25 @@ public class PostController {
         int id = (int) postRepository.count();
         Random rand = new Random();
         int num = rand.nextInt(id + 1);
-
-        Post post = new Post();
-        for(Post po : postRepository.findAll()) {
-            if (po.getId() == num)
-            {
-                post = po;
-            }
+        Post post = postRepository.findById(num).get();
+        if(post != null){
+            return post;
         }
-        return post;
+        else{
+            int num2 = rand.nextInt(id + 1);
+            post = postRepository.findById(num2).get();
+            return post;
+        }
     }
 
     @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable("id") int id) {
-        Post post = new Post();
-        for(Post po : postRepository.findAll()) {
-            if (po.getId() == id)
-            {
-                post = po;
-            }
-        }
+        Post post = postRepository.findById(id).get();
         return post;
     }
 
     @RequestMapping(value = "/getDatabaseCount", method = RequestMethod.GET)
     public long getDatabaseCount(){
-        //long count = postRepository.count();
         return postRepository.count();
     }
 
