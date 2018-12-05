@@ -30,15 +30,10 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 * * * * ")
     public void addPost() throws IOException {
         Post post = getPost(id++);
-        if(post.getTitle() == null || post.getUrl() == null){
-            System.out.println("Post URL or Title NULL, will try again later");
-            return;
-        }
-        else{
-            String url = "http://localhost:8080/addPostToDB";
-            restTemplate.postForObject(url, post, Post.class);
-            System.out.println("Post saved to db " + post.getTitle());
-        }
+        String url = "http://localhost:8080/addPostToDB";
+        restTemplate.postForObject(url, post, Post.class);
+        System.out.println("Post saved to db " + post.getTitle());
+
     }
 
 
