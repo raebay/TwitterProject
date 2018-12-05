@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
 import java.util.Random;
 
 @RestController
@@ -40,6 +41,13 @@ public class PostController {
     @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable("id") int id) {
         Post post = postRepository.findById(id).get();
+        return post;
+    }
+
+    @RequestMapping(value = "/getMostRecentPost", method = RequestMethod.GET)
+    public Post getMostRecentPost() {
+        int dbCount = (int)postRepository.count();
+        Post post = postRepository.findById(dbCount).get();
         return post;
     }
 
