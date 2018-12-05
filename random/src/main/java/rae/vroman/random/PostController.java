@@ -38,15 +38,17 @@ public class PostController {
         return post;
     }
 
+    @Async
     @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable("id") int id) {
         Post post = postRepository.findById(id).get();
         return post;
     }
 
+    @Async
     @RequestMapping(value = "/getMostRecentPost", method = RequestMethod.GET)
     public Post getMostRecentPost() {
-        int dbCount = (int)postRepository.count();
+        int dbCount = (int)postRepository.count() + 1;
         Post post = postRepository.findById(dbCount).get();
         return post;
     }
