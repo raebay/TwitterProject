@@ -6,7 +6,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -41,11 +40,11 @@ public class ScheduledTasks {
 
     //@Scheduled(cron = "0 0 * * * * ")
     @Scheduled(cron = "*/30 * * * * *")
-    public static void postToTwitter() throws Exception {
+    public void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-        Integer databaseCount = restTemplate.getForObject("http://localhost:8080/getMostRecentPost", Integer.class);
-        Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + databaseCount , Post.class);
+     //   Integer databaseCount = restTemplate.getForObject("http://localhost:8080/getMostRecentPost", Integer.class);
+        Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + id , Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         if(post.getTitle() != null){
             String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
