@@ -13,8 +13,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Random;
 import org.apache.commons.io.IOUtils;
 
 
@@ -28,21 +26,25 @@ public class ScheduledTasks {
 
     int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
-    Random rand = new Random();
 
-
-    @Scheduled(cron = "0 0 * * * * ")
+    //@Scheduled(cron = "0 0 * * * * ")
+    @Scheduled(cron = "*/30 * * * * *")
     public void addPost() throws IOException {
         Post post = getPost(id++);
-        if(post.getTitle() != null){
+        if(post.getTitle() == null || post.getUrl() == null){
+            System.out.println("Post URL or Title NULL, will try again later");
+            return;
+        }
+        else{
             String url = "http://localhost:8080/addPostToDB";
             restTemplate.postForObject(url, post, Post.class);
-            System.out.println("Post saved to db" + post.getTitle());
+            System.out.println("Post saved to db " + post.getTitle());
         }
     }
 
 
-    @Scheduled(cron = "0 0 * * * * ")
+    //@Scheduled(cron = "0 0 * * * * ")
+    @Scheduled(cron = "*/30 * * * * *")
     public static void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
@@ -59,18 +61,17 @@ public class ScheduledTasks {
             System.out.println(IOUtils.toString(httpResponse.getEntity().getContent()));
         }
         else{
-            System.out.println("Post object was null, DO NOT POST");
+            System.out.println("Post object was null");
         }
 
     }
 
     public Post getPost(int id) throws IOException {
-        Post post = new Post();
         URL url = new URL("https://api.pushshift.io/reddit/search/submission/?q=dogs");
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String fullStr = "";
         while ((line = inputReader.readLine()) != null) {
             fullStr += line;
@@ -79,32 +80,18 @@ public class ScheduledTasks {
         String postURL = json.getJSONArray("data").getJSONObject(0).getString("url");
         String title = json.getJSONArray("data").getJSONObject(0).getString("title");
         String text = json.getJSONArray("data").getJSONObject(0).getString("selftext");
-        String over18 = "";
-        try{
-            over18 = json.getJSONArray("data").getJSONObject(0).getString("over_18");
 
+        if(text.length() > 235){
+            text = text.substring(0, 235);
         }
-        catch(Exception e){
-            System.out.println("There is no over_18 for this reddit submission");
+        if(postURL.length() > 235){
+            postURL = null;
         }
-        finally{
-            if(!over18.equals("true")){
-                if(text.length() > 235){
-                    String subtext = text.substring(0, 235);
-                }
-
-                post = new Post(id, title, text, postURL);
-                inputStream.close();
-                inputReader.close();
-                System.out.println("Over 18 is not true, this is in the if finally statement" + post.getTitle());
-                return post;
-            }
-            else{
-                System.out.println("Over 18 is true, this is in the else finally statement" + post.getTitle());
-                return post;
-            }
-        }
-
+            Post post = new Post(id, title, text, postURL);
+            inputStream.close();
+            inputReader.close();
+            return post;
     }
-
 }
+
+

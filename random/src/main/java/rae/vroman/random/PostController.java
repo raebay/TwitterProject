@@ -25,7 +25,7 @@ public class PostController {
     public Post getPost() {
         int id = (int) postRepository.count();
         Random rand = new Random();
-        int num = rand.nextInt(id);
+        int num = rand.nextInt(id + 1);
 
         Post post = new Post();
         for(Post po : postRepository.findAll()) {
@@ -37,10 +37,22 @@ public class PostController {
         return post;
     }
 
+    @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
+    public Post getPost(@PathVariable("id") int id) {
+        Post post = new Post();
+        for(Post po : postRepository.findAll()) {
+            if (po.getId() == id)
+            {
+                post = po;
+            }
+        }
+        return post;
+    }
+
     @RequestMapping(value = "/getDatabaseCount", method = RequestMethod.GET)
     public long getDatabaseCount(){
-        long count = postRepository.count();
-        return count;
+        //long count = postRepository.count();
+        return postRepository.count();
     }
 
     @RequestMapping(value = "/updatePost", method = RequestMethod.PUT)
