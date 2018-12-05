@@ -25,16 +25,15 @@ public class PostController {
     public Post getPost() {
         int id = (int) postRepository.count();
         Random rand = new Random();
-        int num = rand.nextInt(id + 1);
-        Post post = postRepository.findById(num).get();
-        if(post != null){
-            return post;
+        Post post = new Post();
+
+        while(post == null){
+
+                int num = rand.nextInt(id +1);
+                post = postRepository.findById(num).get();
         }
-        else{
-            int num2 = rand.nextInt(id + 1);
-            post = postRepository.findById(num2).get();
-            return post;
-        }
+        return post;
+
     }
 
     @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
