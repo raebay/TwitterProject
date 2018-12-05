@@ -19,20 +19,23 @@ public class PostController {
         postRepository.save(newPost);
         return newPost;
     }
-
     @RequestMapping(value = "/getRandPost", method = RequestMethod.GET)
     public Post getPost() {
         int id = (int) postRepository.count();
         Random rand = new Random();
-        int num = rand.nextInt(id);
-
         Post post = new Post();
-        for(Post po : postRepository.findAll()) {
-            if (po.getId() == num)
-            {
-                post = po;
-            }
+
+        while(post.getTitle() == null){
+                int num = rand.nextInt(id);
+                post = postRepository.findById(num).get();
         }
+        return post;
+
+    }
+
+    @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
+    public Post getPost(@PathVariable("id") int id) {
+        Post post = postRepository.findById(id).get();
         return post;
     }
 ```
