@@ -27,8 +27,7 @@ public class PostController {
         Random rand = new Random();
         Post post = new Post();
 
-        while(post == null){
-
+        while(post.getTitle() == null){
                 int num = rand.nextInt(id +1);
                 post = postRepository.findById(num).get();
         }
