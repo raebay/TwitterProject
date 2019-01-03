@@ -14,29 +14,25 @@ public class PostController {
     @Autowired
     public PostRepository postRepository;
 
+    @Async
     @RequestMapping(value = "/addPostToDB", method = RequestMethod.POST)
     public Post addPost(@RequestBody Post newPost) {
         postRepository.save(newPost);
         return newPost;
     }
     
-    @RequestMapping(value = "/getRandPost", method = RequestMethod.GET)
-    public Post getPost() {
-        int id = (int) postRepository.count();
-        Random rand = new Random();
-        Post post = new Post();
-
-        while(post.getTitle() == null){
-                int num = rand.nextInt(id +1);
-                post = postRepository.findById(num).get();
-        }
+    @Async
+    @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
+    public Post getPost(@PathVariable("id") Integer id) {
+        Post post = postRepository.findById(id).get();
         return post;
-
     }
 
-    @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
-    public Post getPost(@PathVariable("id") int id) {
-        Post post = postRepository.findById(id).get();
+    @Async
+    @RequestMapping(value = "/getMostRecentPost", method = RequestMethod.GET)
+    public Post getMostRecentPost() {
+        int dbCount = (int)postRepository.count() + 1;
+        Post post = postRepository.findById(dbCount).get();
         return post;
     }
 ```
@@ -44,22 +40,20 @@ public class PostController {
 <b> Sample from a controller class where scheduled tasks are run to execute the CRUD commands once per hour</b>
 
 ```java
-    @Scheduled(cron = "0 0 * * * * ")
+   @Scheduled(cron = "0 0 * * * * ")
     public void addPost() throws IOException {
         Post post = getPost(id++);
-        if(post.getTitle() != null){
-            String url = "http://localhost:8080/addPostToDB";
-            restTemplate.postForObject(url, post, Post.class);
-            System.out.println("Post saved to db " + post.getTitle());
-        }
+        String url = "http://localhost:8080/addPostToDB";
+        restTemplate.postForObject(url, post, Post.class);
+        System.out.println("Post saved to db " + post.getTitle());
+
     }
 
-
-    @Scheduled(cron = "0 0 * * * * ")
-    public static void postToTwitter() throws Exception {
+   @Scheduled(cron = "0 0 * * * * ")
+    public void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-        Post post = restTemplate.getForObject("http://localhost:8080/getRandPost", Post.class);
+        Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + id , Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         if(post.getTitle() != null){
             String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");
