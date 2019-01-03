@@ -24,7 +24,7 @@ public class ScheduledTasks {
     private static String accessTokenStr = "719527259556724736-S4IZ4hue8ndqiTYQyYTvg0ZQgTYg2kv";
     private static String accessTokenSecretStr = "ghVYM4o4P5Dz0cjVJt1q09u161Mib3w47N09C0PYoUfiQ";
 
-    int id = 1;
+    int id = 0;
     static RestTemplate restTemplate = new RestTemplate();
     String subRed = "dogpictures";
 
@@ -39,12 +39,12 @@ public class ScheduledTasks {
     }
 
 
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "*/45 * * * * *")
   // @Scheduled(cron = "0 0 * * * * ")
     public void postToTwitter() throws Exception {
         OAuthConsumer oAuthConsumer = new CommonsHttpOAuthConsumer(consumerKeyStr, consumerSecretStr);
         oAuthConsumer.setTokenWithSecret(accessTokenStr, accessTokenSecretStr);
-        Post post = restTemplate.getForObject("http://localhost:8080/getPost/" + id , Post.class);
+        Post post = restTemplate.getForObject("http://localhost:8080/getMostRecentPost", Post.class);
         System.out.println("Post retrieved from DB" + post.getTitle() + " " + post.getId());
         if(post.getTitle() != null){
             String str = URLEncoder.encode(post.getTitle() +"\n" + post.getText()+"\n" + post.getUrl(), "UTF-8");

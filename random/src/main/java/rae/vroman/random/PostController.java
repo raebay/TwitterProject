@@ -49,7 +49,7 @@ public class PostController {
     @Async
     @RequestMapping(value = "/getMostRecentPost", method = RequestMethod.GET)
     public Post getMostRecentPost() {
-        int dbCount = (int)postRepository.count() + 1;
+        int dbCount = (int)postRepository.count();
         Post post = postRepository.findById(dbCount).get();
         return post;
     }
